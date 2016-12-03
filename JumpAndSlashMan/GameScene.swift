@@ -9,10 +9,29 @@
 import SpriteKit
 import GameplayKit
 
+func + (left: CGPoint, right: CGPoint) -> CGPoint {
+    return CGPoint(x: left.x + right.x, y: left.y + right.y)
+}
+
+func - (left: CGPoint, right: CGPoint) -> CGPoint {
+    return CGPoint(x: left.x - right.x, y: left.y - right.y)
+}
+
+func * (point: CGPoint, scalar: CGPoint) -> CGPoint {
+    return CGPoint(x: point.x * scalar.x, y: point.y * scalar.y)
+}
+
+func / (point: CGPoint, scalar: CGPoint) -> CGPoint {
+    return CGPoint(x: point.x / scalar.x, y: point.y / scalar.y)
+}
+
+
 class GameScene: SKScene {
     
     private var label : SKLabelNode?
     private var spinnyNode : SKShapeNode?
+    private var playerSprite : SKSpriteNode?
+    private var prevPosition: CGPoint?
     
     override func didMove(to view: SKView) {
         
@@ -22,6 +41,13 @@ class GameScene: SKScene {
             label.alpha = 0.0
             label.run(SKAction.fadeIn(withDuration: 2.0))
         }
+        
+        self.playerSprite = self.childNode(withName: "Player") as? SKSpriteNode
+        
+        if let playerSprite = self.playerSprite {
+            self.prevPosition = playerSprite.position
+        }
+        
         
         // Create shape node to use during mouse interaction
         let w = (self.size.width + self.size.height) * 0.05
@@ -35,31 +61,40 @@ class GameScene: SKScene {
                                               SKAction.fadeOut(withDuration: 0.5),
                                               SKAction.removeFromParent()]))
         }
+
+
     }
     
     
     func touchDown(atPoint pos : CGPoint) {
-        if let n = self.spinnyNode?.copy() as! SKShapeNode? {
+        /* if let n = self.spinnyNode?.copy() as! SKShapeNode? {
             n.position = pos
             n.strokeColor = SKColor.green
             self.addChild(n)
+        } */
+
+        if let playerSprite = self.playerSprite, var prevPosition = self.prevPosition{
+            prevPosition.y += 0.5
+            let newPos = point2DToIso(p: prevPosition)
+            playerSprite.position = newPos
         }
     }
     
     func touchMoved(toPoint pos : CGPoint) {
-        if let n = self.spinnyNode?.copy() as! SKShapeNode? {
-            n.position = pos
-            n.strokeColor = SKColor.blue
-            self.addChild(n)
-        }
+        // if let n = self.spinnyNode?.copy() as! SKShapeNode? {
+        //     n.position = pos
+        //     n.strokeColor = SKColor.blue
+        //     self.addChild(n)
+        // }
+        
     }
     
     func touchUp(atPoint pos : CGPoint) {
-        if let n = self.spinnyNode?.copy() as! SKShapeNode? {
-            n.position = pos
-            n.strokeColor = SKColor.red
-            self.addChild(n)
-        }
+        // if let n = self.spinnyNode?.copy() as! SKShapeNode? {
+        //     n.position = pos
+        //     n.strokeColor = SKColor.red
+        //     self.addChild(n)
+        // }
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -85,5 +120,42 @@ class GameScene: SKScene {
     
     override func update(_ currentTime: TimeInterval) {
         // Called before each frame is rendered
+        
+        
+        if let playerSprite = self.playerSprite, var _ = self.prevPosition{
+            self.prevPosition!.y += 0.5
+            let newPos = point2DToIso(p: self.prevPosition!)
+            playerSprite.position = newPos
+        }
+    }
+    
+    func point2DToIso(p:CGPoint) -> CGPoint {
+    
+        //invert y pre conversion
+        var point = p * CGPoint(x:1, y:-1)
+    
+        //convert using algorithm
+        point = CGPoint(x:(point.x - point.y), y: ((point.x + point.y) / 2))
+    
+        //invert y post conversion
+        point = point * CGPoint(x:1, y:-1)
+    
+        return point
+    
+    }
+    
+    func pointIsoTo2D(p:CGPoint) -> CGPoint {
+        
+        //invert y pre conversion
+        var point = p * CGPoint(x:1, y:-1)
+        
+        //convert using algorithm
+        point = CGPoint(x:((2 * point.y + point.x) / 2), y: ((2 * point.y - point.x) / 2))
+        
+        //invert y post conversion
+        point = point * CGPoint(x:1, y:-1)
+        
+        return point
+        
     }
 }

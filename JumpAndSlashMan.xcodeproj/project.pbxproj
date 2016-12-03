@@ -17,6 +17,7 @@
 		9538EBD11DF0D86D00EE475A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9538EBCF1DF0D86D00EE475A /* LaunchScreen.storyboard */; };
 		9538EBDC1DF0D86D00EE475A /* JumpAndSlashManTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9538EBDB1DF0D86D00EE475A /* JumpAndSlashManTests.swift */; };
 		9538EBE71DF0D86D00EE475A /* JumpAndSlashManUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9538EBE61DF0D86D00EE475A /* JumpAndSlashManUITests.swift */; };
+		9538EBF51DF1491C00EE475A /* JSMTileSet.sks in Resources */ = {isa = PBXBuildFile; fileRef = 9538EBF41DF1491C00EE475A /* JSMTileSet.sks */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -53,6 +54,7 @@
 		9538EBE21DF0D86D00EE475A /* JumpAndSlashManUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = JumpAndSlashManUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		9538EBE61DF0D86D00EE475A /* JumpAndSlashManUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JumpAndSlashManUITests.swift; sourceTree = "<group>"; };
 		9538EBE81DF0D86D00EE475A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		9538EBF41DF1491C00EE475A /* JSMTileSet.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = JSMTileSet.sks; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -107,6 +109,7 @@
 				9538EBC21DF0D86D00EE475A /* GameScene.sks */,
 				9538EBC41DF0D86D00EE475A /* Actions.sks */,
 				9538EBC61DF0D86D00EE475A /* GameScene.swift */,
+				9538EBF41DF1491C00EE475A /* JSMTileSet.sks */,
 				9538EBC81DF0D86D00EE475A /* GameViewController.swift */,
 				9538EBCA1DF0D86D00EE475A /* Main.storyboard */,
 				9538EBCD1DF0D86D00EE475A /* Assets.xcassets */,
@@ -242,6 +245,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				9538EBCC1DF0D86D00EE475A /* Main.storyboard in Resources */,
+				9538EBF51DF1491C00EE475A /* JSMTileSet.sks in Resources */,
 				9538EBC31DF0D86D00EE475A /* GameScene.sks in Resources */,
 				9538EBCE1DF0D86D00EE475A /* Assets.xcassets in Resources */,
 				9538EBD11DF0D86D00EE475A /* LaunchScreen.storyboard in Resources */,
