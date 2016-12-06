@@ -8,6 +8,7 @@
 
 import SpriteKit
 import GameplayKit
+import GameKit
 
 func + (left: CGPoint, right: CGPoint) -> CGPoint {
     return CGPoint(x: left.x + right.x, y: left.y + right.y)
@@ -26,45 +27,89 @@ func / (point: CGPoint, scalar: CGPoint) -> CGPoint {
 }
 
 
-class GameScene: SKScene {
+class GameScene: SKScene, SKPhysicsContactDelegate {
     
-    private var label : SKLabelNode?
-    private var spinnyNode : SKShapeNode?
-    private var playerSprite : SKSpriteNode?
-    private var prevPosition: CGPoint?
     
-    override func didMove(to view: SKView) {
-        
-        // Get label node from scene and store it for use later
-        self.label = self.childNode(withName: "//helloLabel") as? SKLabelNode
-        if let label = self.label {
-            label.alpha = 0.0
-            label.run(SKAction.fadeIn(withDuration: 2.0))
-        }
-        
-        self.playerSprite = self.childNode(withName: "Player") as? SKSpriteNode
-        
-        if let playerSprite = self.playerSprite {
-            self.prevPosition = playerSprite.position
-        }
-        
-        
-        // Create shape node to use during mouse interaction
-        let w = (self.size.width + self.size.height) * 0.05
-        self.spinnyNode = SKShapeNode.init(rectOf: CGSize.init(width: w, height: w), cornerRadius: w * 0.3)
-        
-        if let spinnyNode = self.spinnyNode {
-            spinnyNode.lineWidth = 2.5
-            
-            spinnyNode.run(SKAction.repeatForever(SKAction.rotate(byAngle: CGFloat(M_PI), duration: 1)))
-            spinnyNode.run(SKAction.sequence([SKAction.wait(forDuration: 0.5),
-                                              SKAction.fadeOut(withDuration: 0.5),
-                                              SKAction.removeFromParent()]))
-        }
-
-
+    let playerBitMask: UInt32 = 0x1
+    let npcBitMask: UInt32 = 0x2
+    let collisionBitMask: UInt32 = 0x1
+    var leaderboardIdentifier: String?
+    
+    enum Dir {
+        case still
+        case up
+        case down
+        case left
+        case right
     }
     
+    private var npcSprite: SKSpriteNode?
+    private var playerSprite : SKSpriteNode?
+    private var floorSprite: SKTileMapNode?
+    private var prevPosition: CGPoint?
+    private var direction = Dir.still
+    private let moveSpeed = 8.0
+    private var leaderboard: GKLeaderboard?
+    
+    func swipeDiag(sender: DiagonalSwipeRecognizer) {
+        if (sender.state == .ended) {
+            print(String(describing: sender.direction))
+            
+            if (sender.direction == .ne) {
+                direction = Dir.up
+            } else if (sender.direction == .nw) {
+                direction = Dir.left
+            } else if (sender.direction == .se) {
+                direction = Dir.right
+            } else if (sender.direction == .sw) {
+                direction = Dir.down
+            }
+
+        }
+    }
+    
+    override func didMove(to view: SKView) {
+        self.physicsWorld.contactDelegate = self
+        self.playerSprite = self.childNode(withName: "//Player") as? SKSpriteNode
+        
+        if let _ = self.playerSprite {
+           
+            self.playerSprite!.physicsBody!.categoryBitMask = playerBitMask
+            self.playerSprite!.physicsBody!.contactTestBitMask = npcBitMask
+            self.playerSprite!.physicsBody!.collisionBitMask = 0x1
+             print(self.playerSprite!.description, terminator: "\n")
+
+        } else {
+            print("PlayerSprite, no go")
+        }
+        
+        self.npcSprite = self.childNode(withName: "//NPC") as? SKSpriteNode
+        
+        if let _ = self.npcSprite {
+           self.npcSprite!.physicsBody!.categoryBitMask = npcBitMask
+           self.npcSprite!.physicsBody!.contactTestBitMask = playerBitMask
+            self.npcSprite!.physicsBody!.collisionBitMask = 0x2
+            print(self.npcSprite!.description, terminator: "\n")
+
+        } else {
+            print("NPCSprite, no go")
+        }
+        
+        self.floorSprite = self.childNode(withName: "firstTileNode") as? SKTileMapNode
+        
+        if let floorSprite = self.floorSprite {
+            self.prevPosition = floorSprite.position;
+        } else {
+            print("floorSprite Assignment failed")
+        }
+ 
+        let diagSwipe:DiagonalSwipeRecognizer = DiagonalSwipeRecognizer(target: self, action: #selector(swipeDiag))
+        view.addGestureRecognizer(diagSwipe)
+        
+        print("PlayerSprite Mask" + self.playerSprite!.physicsBody!.description)
+        
+        print("NPCSprite Mask" + self.npcSprite!.physicsBody!.description)
+    }
     
     func touchDown(atPoint pos : CGPoint) {
         /* if let n = self.spinnyNode?.copy() as! SKShapeNode? {
@@ -73,10 +118,10 @@ class GameScene: SKScene {
             self.addChild(n)
         } */
 
-        if let playerSprite = self.playerSprite, var prevPosition = self.prevPosition{
-            prevPosition.y += 0.5
+        if let floorSprite = self.floorSprite, var prevPosition = self.prevPosition{
+            prevPosition.y += 1
             let newPos = point2DToIso(p: prevPosition)
-            playerSprite.position = newPos
+            floorSprite.position = newPos
         }
     }
     
@@ -86,6 +131,7 @@ class GameScene: SKScene {
         //     n.strokeColor = SKColor.blue
         //     self.addChild(n)
         // }
+    
         
     }
     
@@ -98,10 +144,6 @@ class GameScene: SKScene {
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        if let label = self.label {
-            label.run(SKAction.init(named: "Pulse")!, withKey: "fadeInOut")
-        }
-        
         for t in touches { self.touchDown(atPoint: t.location(in: self)) }
     }
     
@@ -117,15 +159,89 @@ class GameScene: SKScene {
         for t in touches { self.touchUp(atPoint: t.location(in: self)) }
     }
     
+    func didBegin(_ contact: SKPhysicsContact) {
+        var numeroUno: SKPhysicsBody?
+        var numeroDos: SKPhysicsBody?
+        print("????")
+        
+        // If player is A
+        if contact.bodyA.categoryBitMask < contact.bodyB.categoryBitMask  {
+            numeroUno = contact.bodyA
+            numeroDos = contact.bodyB
+        } else {
+            numeroUno = contact.bodyB
+            numeroDos = contact.bodyA
+        }
+        
+        if let leadId = leaderboardIdentifier {
+            let newScore = GKScore(leaderboardIdentifier: leadId)
+            
+            newScore.value = 1000
+            
+            GKScore.report([newScore]) {
+                (error) -> Void in
+                print("Reported!")
+            }
+            
+            let leaderboard = GKLeaderboard(players: [GKLocalPlayer.localPlayer()])
+            leaderboard.identifier = leadId
+            leaderboard.loadScores {
+                (scores, error) in
+                if let allScores = scores {
+                    for score in allScores {
+                        print("Score Value: " + String(score.value))
+                    }
+                }
+            }
+        }
+        
+        
+    }
+    
+    func didEnd(_ contact: SKPhysicsContact) {
+    }
     
     override func update(_ currentTime: TimeInterval) {
         // Called before each frame is rendered
         
         
-        if let playerSprite = self.playerSprite, var _ = self.prevPosition{
+        
+        /* if let playerSprite = self.playerSprite, var _ = self.prevPosition{
             self.prevPosition!.y += 0.5
             let newPos = point2DToIso(p: self.prevPosition!)
             playerSprite.position = newPos
+        } */
+        if let _ = self.floorSprite, var _ = self.prevPosition{
+            switch direction {
+            case Dir.still:
+                break
+            case Dir.up:
+                move() { () -> Void in
+                    self.prevPosition!.y -= CGFloat(self.moveSpeed)
+                }
+            case Dir.down:
+                move() { () -> Void in
+                    self.prevPosition!.y += CGFloat(self.moveSpeed)
+                }
+            case Dir.right:
+                move() { () -> Void in
+                    self.prevPosition!.x -= CGFloat(self.moveSpeed)
+                }
+            case Dir.left:
+                move() {() -> Void in
+                    self.prevPosition!.x += CGFloat(self.moveSpeed)
+                }
+            }
+        }
+    
+    }
+    
+    
+    func move(moveDir: () -> Void) {
+        if let floorSprite = self.floorSprite, var _ = self.prevPosition{
+            moveDir()
+            let newPos = point2DToIso(p: self.prevPosition!)
+            floorSprite.position = newPos
         }
     }
     
