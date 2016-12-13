@@ -102,7 +102,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         } else {
             print("floorSprite Assignment failed")
         }
- 
+        
         let diagSwipe:DiagonalSwipeRecognizer = DiagonalSwipeRecognizer(target: self, action: #selector(swipeDiag))
         view.addGestureRecognizer(diagSwipe)
         
@@ -274,4 +274,5 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         return point
         
     }
+    
 }
