@@ -26,6 +26,14 @@ func / (point: CGPoint, scalar: CGPoint) -> CGPoint {
     return CGPoint(x: point.x / scalar.x, y: point.y / scalar.y)
 }
 
+func * (point: CGPoint, scalar: Int) -> CGPoint {
+    return CGPoint(x: point.x * CGFloat(scalar), y: point.y * CGFloat(scalar))
+}
+
+func * (point: CGPoint, scalar: Float) -> CGPoint {
+    return CGPoint(x: point.x * CGFloat(scalar), y: point.y * CGFloat(scalar))
+}
+
 
 class GameScene: SKScene, SKPhysicsContactDelegate {
     
@@ -99,9 +107,31 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         if let floorSprite = self.floorSprite {
             self.prevPosition = floorSprite.position;
+            
+            let w = floorSprite.frame.width
+            //let h = floorSprite.frame.height
+            
+            //let h = floorSprite.frame.height
+            //let h = CGFloat(143.11 * 3.15)
+            
+            let dist = w
+            
+            let point = point2DToIso(p: CGPoint(x: self.prevPosition!.x, y: self.prevPosition!.y + dist))
+            
+            //let point1 = point2DToIso(p: CGPoint(x: self.prevPosition!.x, y: self.prevPosition!.y - dist))
+            
+            //let point2 = point2DToIso(p: CGPoint(x: self.prevPosition!.x - dist, y: self.prevPosition!.y))
+            
+            //let point3 = point2DToIso(p: CGPoint(x: self.prevPosition!.x + dist, y: self.prevPosition!.y))
+        
+            self.floorSprite!.addChild(addNewTileNode(location: point))
+            self.floorSprite!.addChild(addNewTileNode(location: point * 2))
+            self.floorSprite!.addChild(addNewTileNode(location: point * 2.5))
+            self.floorSprite!.addChild(addNewTileNode(location: point * 3))
         } else {
             print("floorSprite Assignment failed")
         }
+        
         
         let diagSwipe:DiagonalSwipeRecognizer = DiagonalSwipeRecognizer(target: self, action: #selector(swipeDiag))
         view.addGestureRecognizer(diagSwipe)
@@ -109,6 +139,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         print("PlayerSprite Mask" + self.playerSprite!.physicsBody!.description)
         
         print("NPCSprite Mask" + self.npcSprite!.physicsBody!.description)
+        
+        let mg = MapGenerator()
+        _ = mg.generateMaze(x: 5, y: 5)
+    
     }
     
     func touchDown(atPoint pos : CGPoint) {
@@ -273,6 +307,20 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         return point
         
+    }
+    
+    func addNewTileNode(location:CGPoint) -> SKTileMapNode {
+        let newTileSet = SKTileSet(named: "tileSet1")
+        let tileSize = CGSize(width: 128, height: 64)
+        let newTile = SKTileMapNode(tileSet: newTileSet!, columns: 7, rows: 7, tileSize: tileSize)
+        
+        //newTileSet?.tileGroups[0]
+        let backgroundGroup = newTileSet?.tileGroups[0]
+        
+        newTile.fill(with: backgroundGroup)
+        newTile.position = location
+        
+        return newTile
     }
     
 }

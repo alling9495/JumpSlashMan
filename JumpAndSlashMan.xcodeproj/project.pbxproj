@@ -19,6 +19,7 @@
 		9538EBE71DF0D86D00EE475A /* JumpAndSlashManUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9538EBE61DF0D86D00EE475A /* JumpAndSlashManUITests.swift */; };
 		9538EBF51DF1491C00EE475A /* JSMTileSet.sks in Resources */ = {isa = PBXBuildFile; fileRef = 9538EBF41DF1491C00EE475A /* JSMTileSet.sks */; };
 		954FC0461DF4CEE0009FA25D /* DiagonalSwipeRecognizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 954FC0451DF4CEE0009FA25D /* DiagonalSwipeRecognizer.swift */; };
+		959363691E0023DF00E1A76C /* MapGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 959363681E0023DF00E1A76C /* MapGenerator.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -57,6 +58,7 @@
 		9538EBE81DF0D86D00EE475A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		9538EBF41DF1491C00EE475A /* JSMTileSet.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = JSMTileSet.sks; sourceTree = "<group>"; };
 		954FC0451DF4CEE0009FA25D /* DiagonalSwipeRecognizer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DiagonalSwipeRecognizer.swift; sourceTree = "<group>"; };
+		959363681E0023DF00E1A76C /* MapGenerator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapGenerator.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -118,6 +120,7 @@
 				9538EBCF1DF0D86D00EE475A /* LaunchScreen.storyboard */,
 				9538EBD21DF0D86D00EE475A /* Info.plist */,
 				954FC0451DF4CEE0009FA25D /* DiagonalSwipeRecognizer.swift */,
+				959363681E0023DF00E1A76C /* MapGenerator.swift */,
 			);
 			path = JumpAndSlashMan;
 			sourceTree = "<group>";
@@ -279,6 +282,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				9538EBC71DF0D86D00EE475A /* GameScene.swift in Sources */,
+				959363691E0023DF00E1A76C /* MapGenerator.swift in Sources */,
 				954FC0461DF4CEE0009FA25D /* DiagonalSwipeRecognizer.swift in Sources */,
 				9538EBC91DF0D86D00EE475A /* GameViewController.swift in Sources */,
 				9538EBC11DF0D86D00EE475A /* AppDelegate.swift in Sources */,
