@@ -20,6 +20,7 @@
 		9538EBF51DF1491C00EE475A /* JSMTileSet.sks in Resources */ = {isa = PBXBuildFile; fileRef = 9538EBF41DF1491C00EE475A /* JSMTileSet.sks */; };
 		954FC0461DF4CEE0009FA25D /* DiagonalSwipeRecognizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 954FC0451DF4CEE0009FA25D /* DiagonalSwipeRecognizer.swift */; };
 		959363691E0023DF00E1A76C /* MapGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 959363681E0023DF00E1A76C /* MapGenerator.swift */; };
+		9593636B1E017CAD00E1A76C /* MazeGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9593636A1E017CAD00E1A76C /* MazeGenerator.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -59,6 +60,7 @@
 		9538EBF41DF1491C00EE475A /* JSMTileSet.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = JSMTileSet.sks; sourceTree = "<group>"; };
 		954FC0451DF4CEE0009FA25D /* DiagonalSwipeRecognizer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DiagonalSwipeRecognizer.swift; sourceTree = "<group>"; };
 		959363681E0023DF00E1A76C /* MapGenerator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapGenerator.swift; sourceTree = "<group>"; };
+		9593636A1E017CAD00E1A76C /* MazeGenerator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MazeGenerator.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -113,6 +115,7 @@
 				9538EBC21DF0D86D00EE475A /* GameScene.sks */,
 				9538EBC41DF0D86D00EE475A /* Actions.sks */,
 				9538EBC61DF0D86D00EE475A /* GameScene.swift */,
+				9593636A1E017CAD00E1A76C /* MazeGenerator.swift */,
 				9538EBF41DF1491C00EE475A /* JSMTileSet.sks */,
 				9538EBC81DF0D86D00EE475A /* GameViewController.swift */,
 				9538EBCA1DF0D86D00EE475A /* Main.storyboard */,
@@ -282,6 +285,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				9538EBC71DF0D86D00EE475A /* GameScene.swift in Sources */,
+				9593636B1E017CAD00E1A76C /* MazeGenerator.swift in Sources */,
 				959363691E0023DF00E1A76C /* MapGenerator.swift in Sources */,
 				954FC0461DF4CEE0009FA25D /* DiagonalSwipeRecognizer.swift in Sources */,
 				9538EBC91DF0D86D00EE475A /* GameViewController.swift in Sources */,

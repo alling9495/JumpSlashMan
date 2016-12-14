@@ -140,8 +140,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         print("NPCSprite Mask" + self.npcSprite!.physicsBody!.description)
         
-        let mg = MapGenerator()
-        _ = mg.generateMaze(x: 5, y: 5)
+        let mg = MazeGenerator()
+        _ = mg.generateMaze(x: 11, y: 11)
     
     }
     
