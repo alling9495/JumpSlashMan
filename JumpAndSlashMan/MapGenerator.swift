@@ -36,7 +36,7 @@ class MapGenerator {
         
         // For every row
         for row in 0..<y {
-            print("Row #" + String(row))
+            //print("Row #" + String(row))
             
             // add new cells
             for column in 0..<x {
@@ -64,23 +64,23 @@ class MapGenerator {
                     let curCol = normCol + row * x
                     let prevCol = normCol + (row - 1) * x
                     
-                    print("not first row: " + String(curCol))
+                    //print("not first row: " + String(curCol))
                     
                     if (cells[prevCol] & bot) > 0 {
-                        print("Cell Has Bottom")
+                      //  print("Cell Has Bottom")
                         idToSet[curCol] = Set<Int>([curCol])
                         cellToId[curCol] = curCol
                     } else {
-                        print("Cell Has No Bottom")
+                        //print("Cell Has No Bottom")
                         idToSet[cellToId[prevCol]!]!.insert(curCol)
                     }
                 }
-                print("Set Gen IdToSet: " + idToSet.description)
-                print("Set Gen cellToId: " + cellToId.description)
+                //print("Set Gen IdToSet: " + idToSet.description)
+                //print("Set Gen cellToId: " + cellToId.description)
             } else {
                 for normCol in 0..<x {
                     let curCol = normCol + row * x
-                    print("first row: " + String(curCol) + " " + String(normCol))
+                    //print("first row: " + String(curCol) + " " + String(normCol))
                     idToSet[curCol] = Set<Int>([curCol])
                     cellToId[curCol] = curCol
                 }
@@ -91,19 +91,19 @@ class MapGenerator {
             for normCol in 0..<x - 1 {
                 let curCol = normCol + row * x
                 let nextCol = curCol + 1
-                print("IdToSet: " + idToSet.description)
-                print("cellToId: " + cellToId.description)
+                //print("IdToSet: " + idToSet.description)
+                //print("cellToId: " + cellToId.description)
                 // Decide whether to add wall to right randomly
                 // If so, add wall, continue
                 if randomGen.nextInt() > 50 {
-                    print("Wall: " + String(curCol) + " " + String(nextCol))
+                    //print("Wall: " + String(curCol) + " " + String(nextCol))
                     cells[curCol] |= right
                     cells[nextCol] |= left
                     setOfSets.insert(cellToId[curCol]!)
                     
                 } else { // Otherwise, join both cells into same set
                     // If they're not in the same set already
-                    print("No Random Wall: " + String(curCol) + " " + String(nextCol))
+                    //print("No Random Wall: " + String(curCol) + " " + String(nextCol))
                     print(cellToId[curCol]!)
                     print(cellToId[nextCol]!)
                     if !(idToSet[cellToId[curCol]!]!.contains(nextCol)) {
@@ -122,7 +122,7 @@ class MapGenerator {
                         
                 
                     } else {
-                        print("Definite Wall: " + String(curCol) + " " + String(nextCol))
+                        //print("Definite Wall: " + String(curCol) + " " + String(nextCol))
                         cells[curCol] |= right
                         cells[nextCol] |= left
                     }
@@ -135,17 +135,17 @@ class MapGenerator {
             /* Add Bottom Walls */
             for set in setOfSets {
                 let checkedSet = idToSet[set]!
-                print("CheckSet: " + checkedSet.description)
+                //print("CheckSet: " + checkedSet.description)
                 
                 var count = 0
                 for cell in checkedSet {
                     if randomGen.nextInt() > 50 {
                         if (count < checkedSet.count - 1) {
-                            print("Assign Bottom: " + String(cell))
+                            //print("Assign Bottom: " + String(cell))
                             cells[cell] |= bot
                             count += 1
                         } else {
-                            print("Did Not Assign Bottom: " + String(cell))
+                            //print("Did Not Assign Bottom: " + String(cell))
                         }
                     }
                 }

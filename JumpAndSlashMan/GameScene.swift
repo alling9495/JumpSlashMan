@@ -53,15 +53,22 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     private var npcSprite: SKSpriteNode?
     private var playerSprite : SKSpriteNode?
+    private var testPlayerSprite: SKSpriteNode?
     private var floorSprite: SKTileMapNode?
+    private var mazeSprite: SKTileMapNode?
     private var prevPosition: CGPoint?
     private var direction = Dir.still
-    private let moveSpeed = 8.0
+    private let origMoveSpeed = 24.0
+    private var moveSpeed = 24.0
+    private let byNumber = 0
+    private var currentByNumber = 0
     private var leaderboard: GKLeaderboard?
+    
+    private var ninja = NinjaPlayer()
     
     func swipeDiag(sender: DiagonalSwipeRecognizer) {
         if (sender.state == .ended) {
-            print(String(describing: sender.direction))
+            //print(String(describing: sender.direction))
             
             if (sender.direction == .ne) {
                 direction = Dir.up
@@ -79,13 +86,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     override func didMove(to view: SKView) {
         self.physicsWorld.contactDelegate = self
         self.playerSprite = self.childNode(withName: "//Player") as? SKSpriteNode
-        
+        self.playerSprite?.removeFromParent()
         if let _ = self.playerSprite {
            
             self.playerSprite!.physicsBody!.categoryBitMask = playerBitMask
             self.playerSprite!.physicsBody!.contactTestBitMask = npcBitMask
             self.playerSprite!.physicsBody!.collisionBitMask = 0x1
              print(self.playerSprite!.description, terminator: "\n")
+            
 
         } else {
             print("PlayerSprite, no go")
@@ -146,7 +154,15 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         let newTile = mg.convertToTileMapNode(49, 49, cells)
         newTile.xScale = 2
         newTile.yScale = 2
+        newTile.anchorPoint
+        self.mazeSprite = newTile
         self.floorSprite!.addChild(newTile)
+        
+        self.testPlayerSprite = SKSpriteNode(texture: self.ninja.attackNE[0])
+        self.testPlayerSprite!.xScale = 2
+        self.testPlayerSprite!.yScale = 2
+        
+        self.addChild(testPlayerSprite!)
     
     }
     
@@ -212,6 +228,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             numeroDos = contact.bodyA
         }
         
+        
+        
         if let leadId = leaderboardIdentifier {
             let newScore = GKScore(leaderboardIdentifier: leadId)
             
@@ -232,6 +250,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                     }
                 }
             }
+            
+            numeroDos?.node?.removeFromParent()
         }
         
         
@@ -243,33 +263,68 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     override func update(_ currentTime: TimeInterval) {
         // Called before each frame is rendered
         
-        
-        
         /* if let playerSprite = self.playerSprite, var _ = self.prevPosition{
             self.prevPosition!.y += 0.5
             let newPos = point2DToIso(p: self.prevPosition!)
             playerSprite.position = newPos
         } */
-        if let _ = self.floorSprite, var _ = self.prevPosition{
+        
+        if let _ = self.floorSprite, var _ = self.prevPosition {
+            //print(self.testPlayerSprite?.position)
+            
+            let origin = CGPoint(x: 0, y: 0)
+            
+            let newPoint = self.mazeSprite!.convert(origin, from: self.mazeSprite!.scene!)
+            //print(newPoint)
+            
+            let rowIndex = self.mazeSprite!.tileRowIndex(fromPosition: newPoint)
+            let colIndex = self.mazeSprite!.tileColumnIndex(fromPosition: newPoint)
+            
+            let tileDef = self.mazeSprite!.tileGroup(atColumn: colIndex, row: rowIndex)
+            
+            //print(tileDef!.name)
+            if (tileDef!.name! != "Grass") {
+                    self.moveSpeed = self.origMoveSpeed / 4
+            } else {
+                    self.moveSpeed = self.origMoveSpeed
+            }
+            
+            
+            if (currentByNumber >= byNumber) {
+                currentByNumber = 0
+            } else {
+                currentByNumber += 1
+            }
+            
+            
             switch direction {
             case Dir.still:
                 break
             case Dir.up:
                 move() { () -> Void in
                     self.prevPosition!.y -= CGFloat(self.moveSpeed)
+                    self.testPlayerSprite?.texture = self.ninja.moveNE.nextFrame()
                 }
             case Dir.down:
                 move() { () -> Void in
                     self.prevPosition!.y += CGFloat(self.moveSpeed)
+                    self.testPlayerSprite?.texture = self.ninja.moveSW.nextFrame()
                 }
             case Dir.right:
                 move() { () -> Void in
                     self.prevPosition!.x -= CGFloat(self.moveSpeed)
+                    self.testPlayerSprite?.texture = self.ninja.moveSE.nextFrame()
                 }
             case Dir.left:
                 move() {() -> Void in
                     self.prevPosition!.x += CGFloat(self.moveSpeed)
+                    self.testPlayerSprite?.texture = self.ninja.moveNW.nextFrame()
                 }
+            }
+           
+            
+            if (currentFrameNumber >= frameNumber) {
+                currentFrameNumber = 0
             }
         }
     
