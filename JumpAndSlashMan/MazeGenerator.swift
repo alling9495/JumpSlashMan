@@ -18,11 +18,11 @@ class MazeGenerator {
     let right = UInt8(0x8)
     let defCell = UInt8(0x0)
     let randomGen = GKRandomDistribution(lowestValue: 0, highestValue: 99)
-    let percentAddWall = 30
+    let percentAddWall = 60
     let percentAddBottom = 50
     var setMan = SetManager()
     
-    func generateMaze(x: Int, y: Int) {
+    func generateMaze(x: Int, y: Int) -> [UInt8] {
         let rowSize = y
         let colSize = x
         
@@ -66,6 +66,7 @@ class MazeGenerator {
                 if row == 0 {
                     newCell |= top
                 } else if row == rowSize - 1 {
+                    print("Bottom Added")
                     newCell |= bot
                 }
                 cells.append(newCell)
@@ -73,24 +74,56 @@ class MazeGenerator {
             
             /* Check above for bottoms */
             if (row != 0) {
+                var purgeList = [Int]()
                 print("Checking for vertical connections")
                 for normCol in 0..<colSize {
                     let curCol = normCol + row * colSize
                     let prevCol = normCol + (row - 1) * colSize
                     
                     if (cells[prevCol] & bot) > 0 {
+                        cells[curCol] |= top
                         setMan.insertToEmpty(curCol)
                     } else {
                         setMan.insertToOther(targ: prevCol, curCol)
+                        purgeList.append(curCol)
                     }
                 }
+                
+                for cell in purgeList {
+                    let cellSet = setMan.getSet(cell: cell)
+                    let colStart = row * colSize
+                    let colEnd = colStart + colSize - 1
+                    
+                    print("ColStart: " + String(colStart) + " ColEnd: " + String(colEnd))
+                    var newSet = Set<Int>()
+                    
+                    for everyCell in cellSet {
+                        if everyCell <= colEnd && everyCell >= colStart {
+                            newSet.insert(everyCell)
+                        }
+                    }
+                    
+                    setMan.updateSet(cell: cell, set: newSet)
+                    
+                }
+                
+                
+                
+                
             }
+        
             
             /* For all unassigned cells, add to set */
             for normCol in 0..<colSize {
                 let curCol = normCol + row * colSize
                 setMan.insertToEmpty(curCol)
             }
+            
+            for normCol in 0..<colSize {
+                let curCell = normCol + row * colSize
+                print(setMan.getSet(cell: curCell), terminator: " ")
+            }
+            print()
             
             
             var currentRowSets = Set<Set<Int>>()
@@ -101,26 +134,27 @@ class MazeGenerator {
                     let curCell = normCol + row * colSize
                     let nextCell = curCell + 1
                 
-                    print("Cells: " + String(curCell) + " " + String(nextCell))
+                    //print("Cells: " + String(curCell) + " " + String(nextCell))
                 
                     if setMan.sameSet(curCell, nextCell) || randomGen.nextInt() > percentAddWall {
-                        print("Adding a wall" + String(setMan.sameSet(curCell, nextCell)))
+                        print("Adding a wall " + String(setMan.sameSet(curCell, nextCell)))
                         cells[curCell] |= right
                         cells[nextCell] |= left
-                    
-                        currentRowSets.insert(setMan.getSet(cell: curCell))
-                    
-                        /* Make sure to get last set in row */
-                        if (normCol == colSize - 2) {
-                            currentRowSets.insert(setMan.getSet(cell: nextCell))
-                        }
+                     
                     } else {
                         print("Not Adding A Wall")
-                        let newSet = setMan.union(cell1: curCell, cell2: nextCell)
-                    
-                        currentRowSets.insert(newSet)
+                        let _ = setMan.union(cell1: curCell, cell2: nextCell)
+                  
                     }
                 }
+            
+            for normCol in 0..<colSize {
+                let curCell = normCol + row * colSize
+                print(setMan.getSet(cell: curCell), terminator: " ")
+                currentRowSets.insert(setMan.getSet(cell: curCell))
+            }
+            print()
+            
             
                 /* Add bottoms */
             
@@ -140,6 +174,7 @@ class MazeGenerator {
                         }
                     }
                 }
+        
         }
         
         /* Finish maze */
@@ -159,7 +194,16 @@ class MazeGenerator {
             
         }
         
+        for normCol in 0..<colSize {
+            let curCell = normCol + (rowSize - 1) * colSize
+            print(setMan.getSet(cell: curCell), terminator: " ")
+        }
+        print()
+        
         printMaze(x, y, cells)
+        
+        
+        return cells
         
         
     }
@@ -176,7 +220,7 @@ class MazeGenerator {
                 if (cells[curCol] & top) > 0 {
                     print("___ ", terminator: "")
                 } else {
-                    //print("", terminator: "")
+                    print("    ", terminator: "")
                 }
             }
             print()
@@ -209,7 +253,7 @@ class MazeGenerator {
                 if (cells[curCol] & bot) > 0 {
                     print("___ ", terminator: "")
                 } else {
-                    //print("B", terminator: "")
+                    print("    ", terminator: "")
                 }
             }
             
@@ -217,6 +261,112 @@ class MazeGenerator {
         }
         
         print("\n")
+    }
+    
+    func convertToTileMapNode(_ x: Int, _ y: Int, _ cells: [UInt8]) -> SKTileMapNode {
+        let newTileSet = SKTileSet(named: "tileSet1")
+        let tileSize = CGSize(width: 128, height: 64)
+        var newTile = SKTileMapNode(tileSet: newTileSet!, columns: x * 3, rows: y * 3, tileSize: tileSize)
+    
+        newTile.enableAutomapping = false
+        let grassGroup = newTileSet?.tileGroups[0]
+        let otherGroup = newTileSet?.tileGroups[1]
+        
+        print(grassGroup!.name! + "---" + otherGroup!.name! )
+        
+        var rowStart = 0
+        var rowEnd = 3
+        var colStart = 0
+        var colEnd = 3
+        
+        var cellNum = 1
+        for cell in cells {
+                    
+            if cellNum % y == 1 && cellNum != 1 {
+                rowStart += 3
+                rowEnd += 3
+                colStart = 0
+                colEnd = 3
+            }
+            
+            
+            let cellLayout = cellToGrid(cell)
+            for row in rowStart..<rowEnd {
+                for col in colStart..<colEnd {
+                    let curTile = (col % 3) + (row % 3) * 3
+                    //print ("row: " + String(row) + " " + "col: " + String(col))
+                
+                    //print(curTile, terminator: " ")
+                    
+                    if cellLayout[curTile] == 0 {
+                        newTile.setTileGroup(grassGroup, forColumn: col, row: row)
+                    } else {
+                        newTile.setTileGroup(otherGroup, forColumn: col, row: row)
+                    }
+                }
+            }
+            cellNum += 1
+            colStart += 3
+            colEnd += 3
+            //print()
+        }
+
+        
+        
+        return newTile
+    }
+    
+    private func cellToGrid(_ cell: UInt8) -> [Int] {
+        var cellMap = [Int]()
+        
+        cellMap.append(1)
+        
+        if (cell & top) > 0 {
+            cellMap.append(1)
+        } else {
+            cellMap.append(0)
+        }
+        
+        cellMap.append(1)
+        
+        if (cell & left) > 0 {
+            cellMap.append(1)
+        } else {
+            cellMap.append(0)
+        }
+        
+        cellMap.append(0)
+        
+        if (cell & right) > 0 {
+            cellMap.append(1)
+        } else {
+            cellMap.append(0)
+        }
+        
+        cellMap.append(1)
+        
+        if (cell & bot) > 0 {
+            cellMap.append(1)
+        } else {
+            cellMap.append(0)
+        }
+        
+        cellMap.append(1)
+        /*
+        print("CellMap: ")
+        for row in 0..<3 {
+            for col in 0..<3 {
+                let curCol = col + row * 3
+                print(cellMap[curCol], terminator: " ")
+            }
+            print()
+        }
+        */
+
+        return cellMap
+        
+        
+        
     }
     
     
@@ -244,7 +394,7 @@ class SetManager {
         var newSet: Set<Int>
         
         if let _ = cellNumberToSet[cell] {
-            
+            print("Already exists")
         } else {
             newSet = Set<Int>()
             newSet.insert(cell)
@@ -261,12 +411,29 @@ class SetManager {
         
         var targSet = cellNumberToSet[targ]!
         targSet.insert(cell)
+        targSet.remove(targ)
+        
+        for otherCell in targSet {
+             cellNumberToSet[otherCell] = targSet
+        }
+        
+        cellNumberToSet[targ] = targSet
+       
 
     }
     
     func getSet(cell: Int) -> Set<Int> {
-        print("Get: " + cellNumberToSet.description)
+        //print("Get: " + cellNumberToSet.description)
         return cellNumberToSet[cell]!
+    }
+    
+    func updateSet(cell: Int, set: Set<Int>) {
+        /* Set all members of set's set to this set */
+        
+        for cell in set {
+            cellNumberToSet[cell] = set
+        }
+        
     }
     
     /* Union both cell's sets together */
@@ -276,6 +443,11 @@ class SetManager {
         let set2 = cellNumberToSet[cell2]!
         /* Union together */
         let set3 = set1.union(set2)
+        
+        /* Set all the appropriate cells */
+        for cell in set1 {
+            cellNumberToSet[cell] = set3
+        }
     
         /* Set both cellNumbers to new set in map */
         cellNumberToSet[cell1] = set3

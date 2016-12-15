@@ -141,7 +141,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         print("NPCSprite Mask" + self.npcSprite!.physicsBody!.description)
         
         let mg = MazeGenerator()
-        _ = mg.generateMaze(x: 11, y: 11)
+        let cells = mg.generateMaze(x: 49, y: 49)
+        
+        let newTile = mg.convertToTileMapNode(49, 49, cells)
+        newTile.xScale = 2
+        newTile.yScale = 2
+        self.floorSprite!.addChild(newTile)
     
     }
     
