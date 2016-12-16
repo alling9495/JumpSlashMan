@@ -200,7 +200,7 @@ class MazeGenerator {
         }
         print()
         
-        printMaze(x, y, cells)
+        //printMaze(x, y, cells)
         
         
         return cells

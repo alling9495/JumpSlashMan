@@ -23,8 +23,10 @@
 		9546CE101E02D5F100AD9048 /* ninjaFrames.plist in Resources */ = {isa = PBXBuildFile; fileRef = 9546CE0D1E02D5F100AD9048 /* ninjaFrames.plist */; };
 		9546CE111E02D5F100AD9048 /* ninjaFrames.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9546CE0E1E02D5F100AD9048 /* ninjaFrames.swift */; };
 		9546CE131E02DA1000AD9048 /* Animation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9546CE121E02DA1000AD9048 /* Animation.swift */; };
+		9546CE181E0477D500AD9048 /* kenneyTiles.1.png in Resources */ = {isa = PBXBuildFile; fileRef = 9546CE151E0477D500AD9048 /* kenneyTiles.1.png */; };
+		9546CE191E0477D500AD9048 /* kenneyTiles.plist in Resources */ = {isa = PBXBuildFile; fileRef = 9546CE161E0477D500AD9048 /* kenneyTiles.plist */; };
+		9546CE1A1E0477D500AD9048 /* kennyTiles.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9546CE171E0477D500AD9048 /* kennyTiles.swift */; };
 		954FC0461DF4CEE0009FA25D /* DiagonalSwipeRecognizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 954FC0451DF4CEE0009FA25D /* DiagonalSwipeRecognizer.swift */; };
-		959363691E0023DF00E1A76C /* MapGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 959363681E0023DF00E1A76C /* MapGenerator.swift */; };
 		9593636B1E017CAD00E1A76C /* MazeGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9593636A1E017CAD00E1A76C /* MazeGenerator.swift */; };
 /* End PBXBuildFile section */
 
@@ -68,8 +70,10 @@
 		9546CE0D1E02D5F100AD9048 /* ninjaFrames.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = ninjaFrames.plist; sourceTree = "<group>"; };
 		9546CE0E1E02D5F100AD9048 /* ninjaFrames.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ninjaFrames.swift; sourceTree = "<group>"; };
 		9546CE121E02DA1000AD9048 /* Animation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Animation.swift; sourceTree = "<group>"; };
+		9546CE151E0477D500AD9048 /* kenneyTiles.1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = kenneyTiles.1.png; sourceTree = "<group>"; };
+		9546CE161E0477D500AD9048 /* kenneyTiles.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = kenneyTiles.plist; sourceTree = "<group>"; };
+		9546CE171E0477D500AD9048 /* kennyTiles.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = kennyTiles.swift; sourceTree = "<group>"; };
 		954FC0451DF4CEE0009FA25D /* DiagonalSwipeRecognizer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DiagonalSwipeRecognizer.swift; sourceTree = "<group>"; };
-		959363681E0023DF00E1A76C /* MapGenerator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapGenerator.swift; sourceTree = "<group>"; };
 		9593636A1E017CAD00E1A76C /* MazeGenerator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MazeGenerator.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -121,6 +125,8 @@
 		9538EBBF1DF0D86D00EE475A /* JumpAndSlashMan */ = {
 			isa = PBXGroup;
 			children = (
+				9546CE141E0477D500AD9048 /* kenneyTiles */,
+				9546CE171E0477D500AD9048 /* kennyTiles.swift */,
 				9546CE091E02D56F00AD9048 /* NinjaPlayer.swift */,
 				9546CE121E02DA1000AD9048 /* Animation.swift */,
 				9546CE0B1E02D5F100AD9048 /* ninjaFrames.atlasc */,
@@ -137,7 +143,6 @@
 				9538EBCF1DF0D86D00EE475A /* LaunchScreen.storyboard */,
 				9538EBD21DF0D86D00EE475A /* Info.plist */,
 				954FC0451DF4CEE0009FA25D /* DiagonalSwipeRecognizer.swift */,
-				959363681E0023DF00E1A76C /* MapGenerator.swift */,
 			);
 			path = JumpAndSlashMan;
 			sourceTree = "<group>";
@@ -167,6 +172,15 @@
 				9546CE0D1E02D5F100AD9048 /* ninjaFrames.plist */,
 			);
 			path = ninjaFrames.atlasc;
+			sourceTree = "<group>";
+		};
+		9546CE141E0477D500AD9048 /* kenneyTiles */ = {
+			isa = PBXGroup;
+			children = (
+				9546CE151E0477D500AD9048 /* kenneyTiles.1.png */,
+				9546CE161E0477D500AD9048 /* kenneyTiles.plist */,
+			);
+			path = kenneyTiles;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -279,7 +293,9 @@
 			files = (
 				9538EBCC1DF0D86D00EE475A /* Main.storyboard in Resources */,
 				9546CE101E02D5F100AD9048 /* ninjaFrames.plist in Resources */,
+				9546CE191E0477D500AD9048 /* kenneyTiles.plist in Resources */,
 				9546CE0F1E02D5F100AD9048 /* ninjaFrames.1.png in Resources */,
+				9546CE181E0477D500AD9048 /* kenneyTiles.1.png in Resources */,
 				9538EBF51DF1491C00EE475A /* JSMTileSet.sks in Resources */,
 				9538EBC31DF0D86D00EE475A /* GameScene.sks in Resources */,
 				9538EBCE1DF0D86D00EE475A /* Assets.xcassets in Resources */,
@@ -311,9 +327,9 @@
 			files = (
 				9538EBC71DF0D86D00EE475A /* GameScene.swift in Sources */,
 				9546CE0A1E02D56F00AD9048 /* NinjaPlayer.swift in Sources */,
+				9546CE1A1E0477D500AD9048 /* kennyTiles.swift in Sources */,
 				9546CE111E02D5F100AD9048 /* ninjaFrames.swift in Sources */,
 				9593636B1E017CAD00E1A76C /* MazeGenerator.swift in Sources */,
-				959363691E0023DF00E1A76C /* MapGenerator.swift in Sources */,
 				954FC0461DF4CEE0009FA25D /* DiagonalSwipeRecognizer.swift in Sources */,
 				9538EBC91DF0D86D00EE475A /* GameViewController.swift in Sources */,
 				9546CE131E02DA1000AD9048 /* Animation.swift in Sources */,

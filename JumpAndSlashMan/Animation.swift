@@ -21,14 +21,14 @@ class Animation {
     }
     
     func nextFrame() -> SKTexture {
-        let out = frames[currentFrame]
-        
-        if currentFrame >= endFrame {
+        //print(currentFrame.description + " " + endFrame.description)
+
+        if currentFrame >= endFrame - 1 {
             currentFrame = 0
         } else {
             currentFrame += 1
         }
-        
+        let out = frames[currentFrame]
         return out
     }
 }

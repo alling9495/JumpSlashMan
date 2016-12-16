@@ -63,7 +63,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     private let byNumber = 0
     private var currentByNumber = 0
     private var leaderboard: GKLeaderboard?
-    
+    private let dashDistance = 120
     private var ninja = NinjaPlayer()
     
     func swipeDiag(sender: DiagonalSwipeRecognizer) {
@@ -71,13 +71,29 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             //print(String(describing: sender.direction))
             
             if (sender.direction == .ne) {
-                direction = Dir.up
+                if (direction != Dir.up) {
+                    direction = Dir.up
+                } else {
+                    dash(CGPoint(x: 0, y: dashDistance), self.ninja.attackNE.frames)
+                }
             } else if (sender.direction == .nw) {
-                direction = Dir.left
+                if (direction != Dir.left) {
+                    direction = Dir.left
+                } else {
+                   dash(CGPoint(x: -dashDistance, y: 0), self.ninja.attackNW.frames)
+                }
             } else if (sender.direction == .se) {
-                direction = Dir.right
+                if (direction != Dir.right) {
+                    direction = Dir.right
+                } else {
+                    dash(CGPoint(x: dashDistance, y: 0), self.ninja.attackSE.frames)
+                }
             } else if (sender.direction == .sw) {
-                direction = Dir.down
+                if (direction != Dir.down) {
+                    direction = Dir.down
+                } else {
+                    dash(CGPoint(x: 0, y: -dashDistance), self.ninja.attackSW.frames)
+                }
             }
 
         }
@@ -154,11 +170,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         let newTile = mg.convertToTileMapNode(49, 49, cells)
         newTile.xScale = 2
         newTile.yScale = 2
-        newTile.anchorPoint
+        newTile.anchorPoint = CGPoint(x: 0.5, y: 0.125)
         self.mazeSprite = newTile
         self.floorSprite!.addChild(newTile)
         
-        self.testPlayerSprite = SKSpriteNode(texture: self.ninja.attackNE[0])
+        self.testPlayerSprite = SKSpriteNode(texture: self.ninja.attackNE.frames[0])
         self.testPlayerSprite!.xScale = 2
         self.testPlayerSprite!.yScale = 2
         
@@ -173,11 +189,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             self.addChild(n)
         } */
 
-        if let floorSprite = self.floorSprite, var prevPosition = self.prevPosition{
+       /* if let floorSprite = self.floorSprite, var prevPosition = self.prevPosition{
             prevPosition.y += 1
             let newPos = point2DToIso(p: prevPosition)
             floorSprite.position = newPos
-        }
+        }*/
+        
+        self.childNode(withName: "//Title")?.removeFromParent()
+        self.childNode(withName: "//Subheading")?.removeFromParent()
     }
     
     func touchMoved(toPoint pos : CGPoint) {
@@ -272,8 +291,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         if let _ = self.floorSprite, var _ = self.prevPosition {
             //print(self.testPlayerSprite?.position)
             
-            let origin = CGPoint(x: 0, y: 0)
-            
+            let origin = self.testPlayerSprite!.position            
             let newPoint = self.mazeSprite!.convert(origin, from: self.mazeSprite!.scene!)
             //print(newPoint)
             
@@ -322,12 +340,45 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 }
             }
            
-            
-            if (currentFrameNumber >= frameNumber) {
-                currentFrameNumber = 0
-            }
         }
     
+    }
+    
+    func dash(_ dashPoint: CGPoint, _ anim: [SKTexture]) {
+        let newPos = point2DToIso(p: dashPoint)
+
+        
+        /* switch direction {
+        case Dir.still:
+            break
+        case Dir.up:
+            move() { () -> Void in
+                self.prevPosition!.y -= CGFloat(self.moveSpeed)
+                self.testPlayerSprite?.texture = self.ninja.moveNE.nextFrame()
+            }
+        case Dir.down:
+            move() { () -> Void in
+                self.prevPosition!.y += CGFloat(self.moveSpeed)
+                self.testPlayerSprite?.texture = self.ninja.moveSW.nextFrame()
+            }
+        case Dir.right:
+            move() { () -> Void in
+                self.prevPosition!.x -= CGFloat(self.moveSpeed)
+                self.testPlayerSprite?.texture = self.ninja.moveSE.nextFrame()
+            }
+        case Dir.left:
+            move() {() -> Void in
+                self.prevPosition!.x += CGFloat(self.moveSpeed)
+                self.testPlayerSprite?.texture = self.ninja.moveNW.nextFrame()
+            }
+        } */
+        
+        let newAction = SKAction.move(by: CGVector(dx: newPos.x, dy: newPos.y), duration: 0.3)
+        let animate = SKAction.animate(with: anim, timePerFrame: 0.033)
+        let group = SKAction.group([newAction, animate])
+        let seq = SKAction.sequence([group, newAction.reversed()])
+        
+        self.testPlayerSprite!.run(seq)
     }
     
     
